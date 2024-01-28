@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTextApi::class)
+
 package com.example.note.View
 
 import android.content.Intent
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FilledTonalButton
@@ -29,7 +32,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,21 +65,23 @@ val FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
 @Composable
 fun NoteRow(note: Note, viewModel: MainViewModel) {
     val priorityColor = when (note.priority) {
-        1 -> Color.Green
-        2 -> Color.Yellow
-        3 -> Color.Red
-        else -> Color.Gray
+        1 -> Color.hsv(113f, 1f, 0.68f)
+        2 -> Color.hsv(52f, 1f, 0.89f)
+        3 -> Color.hsv(0f, 1f, 0.78f)
+        else -> Color.hsv(0f, 0f, 0.49f)
     }
 
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(2.dp),
         onClick = {
             viewModel.selectedNote = note
             viewModel.isNoteOpen.value = true
-        }
+        },
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        shape = RoundedCornerShape(8.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
                 text = note.title,
@@ -87,6 +96,7 @@ fun NoteRow(note: Note, viewModel: MainViewModel) {
               Text(
                   text = note.date.format(FORMATTER),
                   style = MaterialTheme.typography.titleMedium,
+                  color = MaterialTheme.colorScheme.primary
               )
         }
     }

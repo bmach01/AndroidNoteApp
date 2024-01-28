@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.note.Model.MainModel
 import com.example.note.Model.Note
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import kotlin.random.Random
 
@@ -16,8 +18,9 @@ class MainViewModel private constructor() : ViewModel() {
     private var _sortMode = 0
     var sortText = mutableStateOf("Tytuł")
 
-    fun getNotesList(): MutableList<Note> {
-        var randomizer = Random(2137)
+    // TEST INPUT
+    init {
+        val randomizer = Random(2137)
         for (i in 0 .. 20) {
             notes.add(
                 Note(
@@ -33,25 +36,29 @@ class MainViewModel private constructor() : ViewModel() {
                 )
             )
         }
-
-        return notes
-        /* TODO get list from db  */
     }
 
-    fun getNextSort() {
-        _sortMode = (_sortMode + 1) % 3
-        when (_sortMode) {
-            0 -> {
-                notes.sortBy { it.title }
-                sortText.value = "Tytuł"
-            }
-            1 -> {
-                notes.sortBy { it.date }
-                sortText.value = "Data"
-            }
-            2 -> {
-                notes.sortByDescending { it.priority }
-                sortText.value = "Waga"
+    fun getNotesList(): MutableList<Note> {
+        /* TODO get list from db  */
+        return notes
+    }
+
+    fun getNextSort() = runBlocking {
+        launch {
+            _sortMode = (_sortMode + 1) % 3
+            when (_sortMode) {
+                0 -> {
+                    notes.sortBy { it.title }
+                    sortText.value = "Tytuł"
+                }
+                1 -> {
+                    notes.sortBy { it.date }
+                    sortText.value = "Data"
+                }
+                2 -> {
+                    notes.sortByDescending { it.priority }
+                    sortText.value = "Waga"
+                }
             }
         }
     }
