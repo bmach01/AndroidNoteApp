@@ -1,7 +1,7 @@
 package com.example.note.View
 
 import android.app.Activity
-import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +34,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.note.ViewModel.CreationViewModel
 import java.time.Instant
 import java.time.LocalDate
@@ -50,8 +49,13 @@ fun NoteCreationViewPreview() {
 @ExperimentalMaterial3Api
 @Composable
 fun NoteCreationView() {
-    val viewModel: CreationViewModel = viewModel()
+    val viewModel: CreationViewModel = CreationViewModel.getInstance()
     val activity = (LocalContext.current as? Activity)
+
+    BackHandler {
+        viewModel.resetInputs()
+        activity?.finish()
+    }
 
     Column(
         modifier = Modifier
@@ -153,7 +157,6 @@ fun NoteCreationView() {
 
         if (viewModel.isDatePickerExpanded.value) {
             val currentYear = LocalDate.now().year
-            Log.d("DATE", currentYear.toString())
 
             val datePickerState = rememberDatePickerState(
                 initialSelectedDateMillis = viewModel.datePickerState.toEpochMilli(),
@@ -212,7 +215,7 @@ fun NoteCreationView() {
                     else {
                         viewModel.editNote()
                     }
-                    viewModel.isEditing.value = false
+                    viewModel.resetInputs()
                     activity?.finish()
                 },
                 modifier = Modifier

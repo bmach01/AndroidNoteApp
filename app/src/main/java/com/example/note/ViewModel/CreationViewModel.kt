@@ -13,7 +13,7 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 
 @OptIn(ExperimentalMaterial3Api::class)
-class CreationViewModel : ViewModel() {
+class CreationViewModel private constructor() : ViewModel() {
     var title = mutableStateOf("")
     var details = mutableStateOf("")
     var priority = mutableStateOf(0)
@@ -26,9 +26,6 @@ class CreationViewModel : ViewModel() {
     var isEditing = mutableStateOf(false)
     var editingNote: Note? = null
 
-    init {
-        Log.d("viewModel", "Created CreationViewModel " + this.hashCode())
-    }
     fun createNewNote() {
         val note = Note(
             null,
@@ -39,9 +36,7 @@ class CreationViewModel : ViewModel() {
                 datePickerState.toEpochMilli() + (timePickerState.hour - 1) * 3600 * 1000 + timePickerState.minute * 60 * 1000),
                 ZoneId.systemDefault())
         )
-        resetInputs()
         // TODO save in db via model or smth
-        Log.d("NOTE", note.toString())
     }
 
     fun deleteNote(note: Note) {
@@ -60,20 +55,20 @@ class CreationViewModel : ViewModel() {
         )
 
         /* TODO implement updating in db */
-        editingNote = null
-        isEditing.value = false
     }
 
-    private fun resetInputs() {
+    fun resetInputs() {
         title = mutableStateOf("")
         details = mutableStateOf("")
         priority = mutableStateOf(0)
         datePickerState = Instant.now()
         timePickerState = TimePickerState(LocalTime.now().hour, LocalTime.now().minute, true)
+
+        editingNote = null
+        isEditing.value = false
     }
 
     fun copyInputFromNote(note: Note) {
-        Log.d("NOTE", note.title + " " + note.details + " " + note.priority.toString())
         title = mutableStateOf(note.title)
         details.value = note.details
         priority.value = note.priority
@@ -83,8 +78,15 @@ class CreationViewModel : ViewModel() {
         isEditing.value = true
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("viewModel", "Cleared CreationViewModel " + this.hashCode())
+    //SINGLETON
+    companion object {
+        @Volatile
+        private var instance: CreationViewModel? = null
+
+        fun getInstance(): CreationViewModel {
+            return instance ?: synchronized(this) {
+                instance ?: CreationViewModel().also { instance = it }
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@ import com.example.note.Model.MainModel
 import com.example.note.Model.Note
 import java.time.LocalDateTime
 
-class MainViewModel : ViewModel() {
+class MainViewModel private constructor() : ViewModel() {
     val model = MainModel()
     var isNoteOpen = mutableStateOf(false)
     var selectedNote: Note? = null
@@ -19,5 +19,16 @@ class MainViewModel : ViewModel() {
         3,
         LocalDateTime.of(2024, 1, 27, 12, 30)
         ))
+    }
+
+    companion object {
+        @Volatile
+        private var instance: MainViewModel? = null
+
+        fun getInstance(): MainViewModel {
+            return instance ?: synchronized(this) {
+                instance ?: MainViewModel().also { instance = it }
+            }
+        }
     }
 }

@@ -26,7 +26,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.note.Model.Note
 import com.example.note.ViewModel.CreationViewModel
 import com.example.note.ViewModel.MainViewModel
@@ -43,7 +42,7 @@ fun NoteZoomViewPreview() {
         LocalDateTime.of(2024, 1, 27, 12, 30)
     )
 
-    val vm: MainViewModel = viewModel()
+    val vm: MainViewModel= MainViewModel.getInstance()
     vm.isNoteOpen.value = true
     NoteZoomView(note)
 }
@@ -51,9 +50,9 @@ fun NoteZoomViewPreview() {
 
 @Composable
 fun NoteZoomView(note: Note?) {
-    val viewModel: MainViewModel = viewModel()
+    val viewModel: MainViewModel= MainViewModel.getInstance()
     if (note == null || !viewModel.isNoteOpen.value) return
-    val editViewModel: CreationViewModel = viewModel()
+    val editViewModel: CreationViewModel= CreationViewModel.getInstance()
     val context = LocalContext.current
 
     Surface(
