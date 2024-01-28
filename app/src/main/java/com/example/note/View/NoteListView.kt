@@ -1,9 +1,12 @@
 package com.example.note.View
 
 import android.content.Intent
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,7 +39,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 @Preview(showBackground = true)
 fun NoteListViewPreview() {
-//    NoteListView(MainViewModel())
+    NoteListView()
     val note = Note(
         0,
         "Egzamin programowanie III dr Adam Zielonka",
@@ -44,7 +47,7 @@ fun NoteListViewPreview() {
         3,
         LocalDateTime.of(2024, 1, 27, 12, 30)
     )
-    NoteRow(note, MainViewModel())
+//    NoteRow(note, MainViewModel())
 }
 
 val FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
@@ -61,7 +64,10 @@ fun NoteRow(note: Note, viewModel: MainViewModel) {
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        onClick = {viewModel.selectedNote = note}
+        onClick = {
+            viewModel.selectedNote = note
+            viewModel.isNoteOpen.value = true
+        }
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -69,7 +75,7 @@ fun NoteRow(note: Note, viewModel: MainViewModel) {
             Text(
                 text = note.title,
                 style = MaterialTheme.typography.titleMedium,
-                fontSize = 15.sp,
+                color = priorityColor,
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .fillMaxWidth()
@@ -79,7 +85,6 @@ fun NoteRow(note: Note, viewModel: MainViewModel) {
               Text(
                   text = note.date.format(FORMATTER),
                   style = MaterialTheme.typography.titleSmall,
-                  fontSize = 10.sp
               )
         }
     }
@@ -87,25 +92,27 @@ fun NoteRow(note: Note, viewModel: MainViewModel) {
 
 
 @Composable
-fun NoteListView(viewModel: MainViewModel) {
+fun NoteListView() {
+    val viewModel: MainViewModel= MainViewModel.getInstance()
     val context = LocalContext.current
 
-    Text(
-        text = "Notatki",
-        fontSize = 40.sp,
-        modifier = Modifier.padding(10.dp)
-    )
-    Box() {
-        if (!viewModel.isNoteOpen.value) {
+    Column() {
+        Text(
+            text = "Notatki",
+            fontSize = 40.sp,
+            modifier = Modifier.padding(10.dp)
+        )
+        Box() {
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(viewModel.getNotesList()) {
-                        note -> NoteRow(note, viewModel)
+                items(viewModel.getNotesList()) { note ->
+                    NoteRow(note, viewModel)
                 }
             }
             FloatingActionButton(
                 onClick = {
+                    viewModel.isNoteOpen.value = false
                     context.startActivity(Intent(context, CreationActivity::class.java))
                 },
                 modifier = Modifier
@@ -120,9 +127,21 @@ fun NoteListView(viewModel: MainViewModel) {
                     modifier = Modifier.size(80.dp)
                 )
             }
-        }
-        else {
-            NoteZoomView(viewModel.selectedNote)
+            if (viewModel.isNoteOpen.value) {
+                Row (
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 50.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    NoteZoomView(viewModel.selectedNote)
+                }
+                BackHandler {
+                    viewModel.isNoteOpen.value = false
+                }
+            }
+
+
         }
     }
 }

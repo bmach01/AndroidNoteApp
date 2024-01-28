@@ -1,6 +1,7 @@
 package com.example.note.View
 
-import android.util.Log
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,12 +43,20 @@ import java.time.LocalDate
 @ExperimentalMaterial3Api
 @Preview(showBackground = true)
 fun NoteCreationViewPreview() {
-    NoteCreationView(CreationViewModel())
+    NoteCreationView()
 }
 
 @ExperimentalMaterial3Api
 @Composable
-fun NoteCreationView(viewModel: CreationViewModel) {
+fun NoteCreationView() {
+    val viewModel: CreationViewModel = CreationViewModel.getInstance()
+    val activity = (LocalContext.current as? Activity)
+
+    BackHandler {
+        viewModel.resetInputs()
+        activity?.finish()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -147,7 +157,6 @@ fun NoteCreationView(viewModel: CreationViewModel) {
 
         if (viewModel.isDatePickerExpanded.value) {
             val currentYear = LocalDate.now().year
-            Log.d("DATE", currentYear.toString())
 
             val datePickerState = rememberDatePickerState(
                 initialSelectedDateMillis = viewModel.datePickerState.toEpochMilli(),
@@ -174,7 +183,9 @@ fun NoteCreationView(viewModel: CreationViewModel) {
         if (viewModel.isTimePickerExpanded.value) {
             Row(
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth().padding(8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
             ) {
                 TimePicker(
                     state = viewModel.timePickerState,
@@ -197,7 +208,16 @@ fun NoteCreationView(viewModel: CreationViewModel) {
 
             // Submit forms button
             FloatingActionButton(
-                onClick = { viewModel.createNewNote() },
+                onClick = {
+                    if (!viewModel.isEditing.value) {
+                        viewModel.createNewNote()
+                    }
+                    else {
+                        viewModel.editNote()
+                    }
+                    viewModel.resetInputs()
+                    activity?.finish()
+                },
                 modifier = Modifier
                     .align(CenterHorizontally)
                     .padding(bottom = 100.dp)
@@ -206,7 +226,7 @@ fun NoteCreationView(viewModel: CreationViewModel) {
             ) {
                 Icon(
                     Icons.Filled.Create,
-                    "Floating create button",
+                    "Create button",
                     modifier = Modifier.size(80.dp)
                 )
             }
