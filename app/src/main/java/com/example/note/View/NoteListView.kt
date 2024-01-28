@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -74,7 +76,7 @@ fun NoteRow(note: Note, viewModel: MainViewModel) {
         ) {
             Text(
                 text = note.title,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.headlineSmall,
                 color = priorityColor,
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
@@ -84,7 +86,7 @@ fun NoteRow(note: Note, viewModel: MainViewModel) {
 
               Text(
                   text = note.date.format(FORMATTER),
-                  style = MaterialTheme.typography.titleSmall,
+                  style = MaterialTheme.typography.titleMedium,
               )
         }
     }
@@ -96,12 +98,42 @@ fun NoteListView() {
     val viewModel: MainViewModel= MainViewModel.getInstance()
     val context = LocalContext.current
 
-    Column() {
-        Text(
-            text = "Notatki",
-            fontSize = 40.sp,
-            modifier = Modifier.padding(10.dp)
-        )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = "Notatki",
+                fontSize = 40.sp,
+                modifier = Modifier.padding(10.dp)
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(
+                modifier = Modifier.padding(top = 15.dp, end = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Sortuj po:",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                FilledTonalButton(
+                    onClick = {viewModel.getNextSort()}
+                ) {
+                    Text(
+                        text = viewModel.sortText.value,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(10.dp))
         Box() {
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
