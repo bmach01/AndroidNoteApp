@@ -8,13 +8,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import com.example.note.ViewModel.CreationViewModel
 
 class CreationActivity : ComponentActivity() {
-    private val viewModel: CreationViewModel by viewModels()
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            NoteCreationView(viewModel)
+            NoteCreationView()
         }
     }
 }

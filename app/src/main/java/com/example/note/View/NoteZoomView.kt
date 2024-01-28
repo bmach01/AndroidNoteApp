@@ -1,11 +1,21 @@
 package com.example.note.View
 
+import android.content.Intent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -13,9 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.note.Model.Note
+import com.example.note.ViewModel.CreationViewModel
+import com.example.note.ViewModel.MainViewModel
 import java.time.LocalDateTime
 
 @Composable
@@ -28,21 +42,28 @@ fun NoteZoomViewPreview() {
         3,
         LocalDateTime.of(2024, 1, 27, 12, 30)
     )
+
+    val vm: MainViewModel = viewModel()
+    vm.isNoteOpen.value = true
     NoteZoomView(note)
 }
 
 
 @Composable
 fun NoteZoomView(note: Note?) {
-    if (note == null) return
+    val viewModel: MainViewModel = viewModel()
+    if (note == null || !viewModel.isNoteOpen.value) return
+    val editViewModel: CreationViewModel = viewModel()
+    val context = LocalContext.current
 
     Surface(
         modifier = Modifier
-            .width(250.dp)
-            .height(300.dp)
+            .width(300.dp)
+            .height(400.dp)
             .padding(2.dp),
         shape = MaterialTheme.shapes.medium,
-        shadowElevation = 4.dp
+        shadowElevation = 4.dp,
+
     ) {
         Column(
             modifier = Modifier
@@ -71,6 +92,39 @@ fun NoteZoomView(note: Note?) {
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(8.dp)
             )
+
+            // Options
+            Spacer(modifier = Modifier.weight(1f))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                FilledTonalButton(
+                    onClick = {
+                        viewModel.isNoteOpen.value = false
+                        context.startActivity(Intent(context, CreationActivity::class.java))
+                        editViewModel.copyInputFromNote(note)
+                    }
+                ) {
+                    Icon(
+                        Icons.Filled.Edit,
+                        "Edit button"
+                    )
+                }
+
+                FilledTonalButton(
+                    onClick = {
+                        editViewModel.deleteNote(note)
+                        viewModel.isNoteOpen.value = false
+                    }
+                ) {
+                    Icon(
+                        Icons.Filled.Delete,
+                        "Delete button"
+                    )
+                }
+            }
         }
     }
 }

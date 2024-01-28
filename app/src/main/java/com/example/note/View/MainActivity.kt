@@ -10,12 +10,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import com.example.note.ViewModel.MainViewModel
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            NoteListView(viewModel)
+            NoteListView()
         }
     }
 
