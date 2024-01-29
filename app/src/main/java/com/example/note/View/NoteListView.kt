@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,7 +53,7 @@ fun NoteListViewPreview() {
         3,
         LocalDateTime.of(2024, 1, 27, 12, 30)
     )
-//    NoteRow(note, MainViewModel())
+//    NoteRow(note, MainViewModel.getInstance())
 }
 
 val FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
@@ -74,7 +76,7 @@ fun NoteRow(note: Note, viewModel: MainViewModel) {
             viewModel.selectedNote = note
             viewModel.isNoteOpen.value = true
         },
-        color = MaterialTheme.colorScheme.secondaryContainer,
+        color = MaterialTheme.colorScheme.primaryContainer,
         shape = RoundedCornerShape(8.dp)
     ) {
         Column(
@@ -83,18 +85,34 @@ fun NoteRow(note: Note, viewModel: MainViewModel) {
             Text(
                 text = note.title,
                 style = MaterialTheme.typography.headlineSmall,
-                color = priorityColor,
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
             )
 
-              Text(
-                  text = note.date.format(FORMATTER),
-                  style = MaterialTheme.typography.titleMedium,
-                  color = MaterialTheme.colorScheme.primary
-              )
+            Row(
+                modifier = Modifier.padding(
+                    start = 4.dp,
+                    end = 4.dp
+                )
+            ) {
+                Text(
+                    text = note.date.format(FORMATTER),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+                Row() {
+                    for (i in 0 until note.priority) {
+                        Icon(
+                            Icons.Filled.Star, "Priority star",
+                            tint = priorityColor
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -102,7 +120,7 @@ fun NoteRow(note: Note, viewModel: MainViewModel) {
 
 @Composable
 fun NoteListView() {
-    val viewModel: MainViewModel= MainViewModel.getInstance()
+    val viewModel: MainViewModel = MainViewModel.getInstance()
     val context = LocalContext.current
 
     Column(

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,9 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.note.Model.Note
+import com.example.note.R
 import com.example.note.ViewModel.CreationViewModel
 import com.example.note.ViewModel.MainViewModel
 import java.time.LocalDateTime
@@ -54,6 +57,12 @@ fun NoteZoomView(note: Note?) {
     if (note == null || !viewModel.isNoteOpen.value) return
     val editViewModel: CreationViewModel= CreationViewModel.getInstance()
     val context = LocalContext.current
+    val priorityColor = when (note.priority) {
+        1 -> colorResource(R.color.green)
+        2 -> colorResource(R.color.orange)
+        3 -> colorResource(R.color.red)
+        else -> colorResource(R.color.gray)
+    }
 
     Surface(
         modifier = Modifier
@@ -69,13 +78,29 @@ fun NoteZoomView(note: Note?) {
                 .fillMaxSize()
                 .padding(4.dp)
         ) {
-            Text(
-                text = note.date.format(FORMATTER),
-                style = MaterialTheme.typography.titleSmall,
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(8.dp)
-            )
+            Row(
+                modifier = Modifier.padding(
+                    start = 2.dp,
+                    end = 2.dp
+                )
+            ) {
+                Text(
+                    text = note.date.format(FORMATTER),
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(8.dp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Row() {
+                    for (i in 0 until note.priority) {
+                        Icon(
+                            Icons.Filled.Star, "Priority star",
+                            tint = priorityColor
+                        )
+                    }
+                }
+            }
+
 
             Text(
                 text = note.title,
