@@ -4,6 +4,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.note.Model.MainModel
 import com.example.note.Model.Note
 import java.time.Instant
 import java.time.LocalDateTime
@@ -25,6 +26,9 @@ class CreationViewModel private constructor() : ViewModel() {
     var isEditing = mutableStateOf(false)
     var editingNote: Note? = null
 
+    private var notes = MainViewModel.getInstance().notes
+    private val model = MainModel.getInstance()
+
     fun createNewNote() {
         val note = Note(
             null,
@@ -35,12 +39,15 @@ class CreationViewModel private constructor() : ViewModel() {
                 datePickerState.toEpochMilli() + (timePickerState.hour - 1) * 3600 * 1000 + timePickerState.minute * 60 * 1000),
                 ZoneId.systemDefault())
         )
+        notes.add(note)
         // TODO save in db via model or smth
+        model.saveNoteDB(note)
     }
 
     fun deleteNote(note: Note) {
-        MainViewModel.getInstance().notes.remove(note)
+        notes.remove(note)
         /* TODO implement deleting from db */
+        model.deleteNoteDB(note)
     }
 
     fun editNote() {
@@ -51,12 +58,13 @@ class CreationViewModel private constructor() : ViewModel() {
             datePickerState.toEpochMilli() + (timePickerState.hour - 1) * 3600 * 1000 + timePickerState.minute * 60 * 1000),
             ZoneId.systemDefault())
 
-        // this solution is bad but it will do for now
-        var index = MainViewModel.getInstance().notes.indexOf(editingNote)
-        MainViewModel.getInstance().notes.remove(editingNote)
-        MainViewModel.getInstance().notes.add(index, editingNote!!)
+        // this solution is bad but it will do
+        var index = notes.indexOf(editingNote)
+        notes.remove(editingNote)
+        notes.add(index, editingNote!!)
 
         /* TODO implement updating in db */
+        model.updateNoteDB(editingNote!!)
     }
 
     fun resetInputs() {

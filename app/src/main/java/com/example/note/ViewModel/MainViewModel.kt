@@ -11,12 +11,13 @@ import java.time.LocalDateTime
 import kotlin.random.Random
 
 class MainViewModel private constructor() : ViewModel() {
-    val model = MainModel()
     var isNoteOpen = mutableStateOf(false)
     var selectedNote: Note? = null
     var notes = mutableStateListOf<Note>()
-    private var _sortMode = 0
     var sortText = mutableStateOf("Tytuł")
+    private var _sortMode = 0
+
+    private val model = MainModel.getInstance()
 
     // TEST INPUT
     init {
@@ -40,6 +41,7 @@ class MainViewModel private constructor() : ViewModel() {
 
     fun getNotesList(): MutableList<Note> {
         /* TODO get list from db  */
+//        notes = mutableStateListOf(model.getAllNotesDB())
         return notes
     }
 

@@ -2,6 +2,19 @@ package com.example.note.Model
 
 class MainModel {
 
+    fun saveNoteDB(note: Note) {
+
+    }
+
+    fun updateNoteDB(note: Note) {
+
+    }
+
+    fun deleteNoteDB(note: Note) {
+
+    }
+
+
     // SINGLETON
     companion object {
         @Volatile
