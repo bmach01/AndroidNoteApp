@@ -54,7 +54,8 @@ class CreationViewModel private constructor() : ViewModel() {
 
     fun editNote() {
         editingNote!!.title = title.value
-        editingNote!!.details = details.value.uppercase()
+        editingNote!!.category = category.value.uppercase()
+        editingNote!!.details = details.value
         editingNote!!.priority = priority.value
         editingNote!!.date = LocalDateTime.ofInstant(Instant.ofEpochMilli( //aids
             datePickerState.toEpochMilli() + (timePickerState.hour - 1) * 3600 * 1000 + timePickerState.minute * 60 * 1000),

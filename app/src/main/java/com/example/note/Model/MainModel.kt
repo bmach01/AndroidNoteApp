@@ -1,18 +1,46 @@
 package com.example.note.Model
 
 class MainModel {
+    lateinit var scheduler: AndroidAlarmScheduler
 
+    fun schedule(note: Note) {
+        val alarmItem = AlarmItem(
+            time = note.date,
+            message = note.title,
+            id = note.id
+        )
+        scheduler.cancel(alarmItem)
+
+        if (note.priority >= 2) {
+            scheduler.schedule(alarmItem)
+        }
+    }
+
+    fun scheduleList(notes: MutableList<Note>) {
+        for (note in notes) {
+            schedule(note)
+        }
+    }
 
     fun saveNoteDB(note: Note) {
-
+        schedule(note)
+        /* TODO save to db */
     }
 
     fun updateNoteDB(note: Note) {
-
+        schedule(note)
+        /* TODO update in db */
     }
 
     fun deleteNoteDB(note: Note) {
-
+        scheduler.cancel(
+            AlarmItem(
+                id = note.id,
+                message = note.title,
+                time = note.date
+            )
+        )
+        /* TODO delete from db */
     }
 
 

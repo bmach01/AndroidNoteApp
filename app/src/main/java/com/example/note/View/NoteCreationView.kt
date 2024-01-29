@@ -1,6 +1,5 @@
 package com.example.note.View
 
-import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,7 +50,7 @@ fun NoteCreationViewPreview() {
 @Composable
 fun NoteCreationView() {
     val viewModel: CreationViewModel = CreationViewModel.getInstance()
-    val activity = (LocalContext.current as? Activity)
+    val activity = (LocalContext.current as? CreationActivity)
 
     BackHandler {
         viewModel.resetInputs()
@@ -225,7 +224,9 @@ fun NoteCreationView() {
                         viewModel.editNote()
                     }
                     viewModel.resetInputs()
-                    activity?.finish()
+                    activity!!.finish()
+
+
                 },
                 modifier = Modifier
                     .align(CenterHorizontally)

@@ -19,7 +19,7 @@ class MainViewModel private constructor() : ViewModel() {
 
     private val model = MainModel.getInstance()
 
-    // TEST INPUT
+    // PREVIEW INPUT
     init {
         val randomizer = Random(2137)
         for (i in 0 .. 10) {
