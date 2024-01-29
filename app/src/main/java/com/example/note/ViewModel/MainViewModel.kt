@@ -63,6 +63,7 @@ class MainViewModel private constructor() : ViewModel() {
         }
     }
 
+    // SINGLETON
     companion object {
         @Volatile
         private var instance: MainViewModel? = null
