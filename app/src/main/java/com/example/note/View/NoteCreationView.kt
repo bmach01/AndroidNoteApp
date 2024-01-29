@@ -81,6 +81,15 @@ fun NoteCreationView() {
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             )
+            // Category input
+            OutlinedTextField(
+                value = viewModel.category.value,
+                onValueChange = { newText -> viewModel.category.value = newText },
+                label = { Text("Kategoria") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
 
             // Priority Input
             Spacer(modifier = Modifier.width(16.dp))
@@ -204,7 +213,7 @@ fun NoteCreationView() {
                     .padding(bottom = 8.dp)
             )
 
-            Spacer(modifier = Modifier.height(100.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             // Submit forms button
             FloatingActionButton(

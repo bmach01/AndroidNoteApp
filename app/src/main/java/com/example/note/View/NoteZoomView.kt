@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.note.Model.Note
@@ -40,6 +41,7 @@ fun NoteZoomViewPreview() {
     val note = Note(
         0,
         "Egzamin programowanie III dr Adam Zielonka",
+        "szkoła",
         "Egzamin z programowania III semestr wzorce architektonicze mvvm, mvc, itp.",
         3,
         LocalDateTime.of(2024, 1, 27, 12, 30)
@@ -100,6 +102,13 @@ fun NoteZoomView(note: Note?) {
                     }
                 }
             }
+
+            Text(
+                text = note.category.uppercase(),
+                textAlign = TextAlign.Right,
+                modifier = Modifier.fillMaxWidth().padding(end = 8.dp, bottom = 4.dp),
+                style = MaterialTheme.typography.titleSmall
+            )
 
 
             Text(

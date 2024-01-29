@@ -16,6 +16,7 @@ import java.time.ZoneOffset
 class CreationViewModel private constructor() : ViewModel() {
     var title = mutableStateOf("")
     var details = mutableStateOf("")
+    var category = mutableStateOf("")
     var priority = mutableStateOf(0)
     var datePickerState = Instant.now()
     var timePickerState = TimePickerState(LocalTime.now().hour, LocalTime.now().minute, true)
@@ -33,6 +34,7 @@ class CreationViewModel private constructor() : ViewModel() {
         val note = Note(
             null,
             title.value,
+            category.value,
             details.value,
             priority.value,
             LocalDateTime.ofInstant(Instant.ofEpochMilli( //aids

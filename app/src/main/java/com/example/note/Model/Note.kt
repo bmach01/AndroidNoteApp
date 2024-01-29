@@ -7,6 +7,7 @@ data class Note(
 
     val id: Int?,
     var title: String,
+    var category: String,
     var details: String,
     var priority: Int,
     var date: LocalDateTime

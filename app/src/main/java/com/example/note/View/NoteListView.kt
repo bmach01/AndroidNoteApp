@@ -49,6 +49,7 @@ fun NoteListViewPreview() {
     val note = Note(
         0,
         "Egzamin programowanie III dr Adam Zielonka",
+        "szkoła",
         "Egzamin z programowania III semestr wzorce architektonicze mvvm, mvc, itp.",
         3,
         LocalDateTime.of(2024, 1, 27, 12, 30)

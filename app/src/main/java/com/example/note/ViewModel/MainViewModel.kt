@@ -22,11 +22,12 @@ class MainViewModel private constructor() : ViewModel() {
     // TEST INPUT
     init {
         val randomizer = Random(2137)
-        for (i in 0 .. 20) {
+        for (i in 0 .. 10) {
             notes.add(
                 Note(
                     0,
                     "Egzamin programowanie III dr Adam Zielonka",
+                    "szkoła",
                     "Egzamin z programowania III semestr wzorce architektonicze mvvm, mvc, itp.",
                     randomizer.nextInt(0, 4),
                     LocalDateTime.of(2024,
@@ -47,7 +48,7 @@ class MainViewModel private constructor() : ViewModel() {
 
     fun getNextSort() = runBlocking {
         launch {
-            _sortMode = (_sortMode + 1) % 3
+            _sortMode = (_sortMode + 1) % 4
             when (_sortMode) {
                 0 -> {
                     notes.sortBy { it.title }
@@ -60,6 +61,10 @@ class MainViewModel private constructor() : ViewModel() {
                 2 -> {
                     notes.sortByDescending { it.priority }
                     sortText.value = "Waga"
+                }
+                3 -> {
+                    notes.sortBy { it.category }
+                    sortText.value = "Kateg."
                 }
             }
         }

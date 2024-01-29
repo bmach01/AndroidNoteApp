@@ -2,6 +2,7 @@ package com.example.note.Model
 
 class MainModel {
 
+
     fun saveNoteDB(note: Note) {
 
     }
