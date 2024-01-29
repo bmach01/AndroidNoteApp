@@ -34,7 +34,7 @@ class CreationViewModel private constructor() : ViewModel() {
         val note = Note(
             null,
             title.value,
-            category.value,
+            category.value.uppercase(),
             details.value,
             priority.value,
             LocalDateTime.ofInstant(Instant.ofEpochMilli( //aids
@@ -54,7 +54,7 @@ class CreationViewModel private constructor() : ViewModel() {
 
     fun editNote() {
         editingNote!!.title = title.value
-        editingNote!!.details = details.value
+        editingNote!!.details = details.value.uppercase()
         editingNote!!.priority = priority.value
         editingNote!!.date = LocalDateTime.ofInstant(Instant.ofEpochMilli( //aids
             datePickerState.toEpochMilli() + (timePickerState.hour - 1) * 3600 * 1000 + timePickerState.minute * 60 * 1000),
@@ -71,6 +71,7 @@ class CreationViewModel private constructor() : ViewModel() {
 
     fun resetInputs() {
         title = mutableStateOf("")
+        category = mutableStateOf("")
         details = mutableStateOf("")
         priority = mutableStateOf(0)
         datePickerState = Instant.now()
@@ -81,7 +82,8 @@ class CreationViewModel private constructor() : ViewModel() {
     }
 
     fun copyInputFromNote(note: Note) {
-        title = mutableStateOf(note.title)
+        title.value = note.title
+        category.value = note.category
         details.value = note.details
         priority.value = note.priority
         datePickerState = note.date.toInstant(ZoneOffset.systemDefault().rules.getOffset(Instant.now()))
