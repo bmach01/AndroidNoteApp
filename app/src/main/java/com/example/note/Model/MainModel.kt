@@ -14,22 +14,7 @@ import java.util.Date
 import java.util.UUID
 import java.util.*
 
-class MainModel(private val context: Context) {
-
-    data class FetchNoteDto(
-        val id: Long,
-        val title: String,
-        val category: String,
-        val priority: Int,
-        val date: Date
-    )
-
-    data class PostNoteDto(
-        val title: String,
-        val category: String,
-        val priority: Int,
-        val date: Date
-    )
+class MainModel() {
 
     class DeviceInfoProvider(private val context: Context) {
 
@@ -48,8 +33,9 @@ class MainModel(private val context: Context) {
         }
     }
 
-    private val baseUrl = "http://example.com/api" // Zmień na właściwy URL Twojego API
+    private val baseUrl = "http://38.242.150.102:9855"
 
+    lateinit var context : Context
     private fun getHeaders(): Map<String, String> {
         val headers = mutableMapOf<String, String>()
         val deviceId = DeviceInfoProvider(context).getOrGenerateUUID()
@@ -57,19 +43,19 @@ class MainModel(private val context: Context) {
         return headers
     }
 
-    fun saveNoteDB(note: PostNoteDto) {
+    fun saveNoteDB(note: Note) {
         GlobalScope.launch(Dispatchers.IO) {
             val response = doPostRequest("$baseUrl/v1/notes", note)
         }
     }
 
-    fun updateNoteDB(id: Long, note: PostNoteDto) {
+    fun updateNoteDB(note: Note) {
         GlobalScope.launch(Dispatchers.IO) {
-            val response = doPatchRequest("$baseUrl/v1/notes/$id", note)
+            val response = doPatchRequest("$baseUrl/v1/notes/$note.id", note)
         }
     }
 
-    fun deleteNoteDB(id: Long) {
+    fun deleteNoteDB(id: Long?) {
         GlobalScope.launch(Dispatchers.IO) {
             val response = doDeleteRequest("$baseUrl/v1/notes/$id")
         }
@@ -81,11 +67,11 @@ class MainModel(private val context: Context) {
         }
     }
 
-    private fun doPostRequest(url: String, postData: PostNoteDto): String {
+    private fun doPostRequest(url: String, postData: Note): String {
         return doHttpRequest(url, "POST", postData)
     }
 
-    private fun doPatchRequest(url: String, patchData: PostNoteDto): String {
+    private fun doPatchRequest(url: String, patchData: Note): String {
         return doHttpRequest(url, "PATCH", patchData)
     }
 
@@ -140,10 +126,9 @@ class MainModel(private val context: Context) {
         @Volatile
         private var instance: MainModel? = null
 
-
-        fun getInstance(context: Context): MainModel {
+        fun getInstance(): MainModel {
             return instance ?: synchronized(this) {
-                instance ?: MainModel(context).also { instance = it }
+                instance ?: MainModel().also { instance = it }
             }
         }
     }

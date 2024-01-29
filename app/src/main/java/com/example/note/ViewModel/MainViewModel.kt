@@ -17,6 +17,7 @@ class MainViewModel private constructor() : ViewModel() {
     var sortText = mutableStateOf("Tytuł")
     private var _sortMode = 0
 
+
     private val model = MainModel.getInstance()
 
     // TEST INPUT

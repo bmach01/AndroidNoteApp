@@ -1,5 +1,7 @@
 package com.example.note.ViewModel
 
+import android.app.Application
+import android.content.Context
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +31,7 @@ class CreationViewModel private constructor() : ViewModel() {
 
     private var notes = MainViewModel.getInstance().notes
 
+    var context = null
     private val model = MainModel.getInstance()
 
     fun createNewNote() {
@@ -50,7 +53,7 @@ class CreationViewModel private constructor() : ViewModel() {
     fun deleteNote(note: Note) {
         notes.remove(note)
         /* TODO implement deleting from db */
-        model.deleteNoteDB(note)
+        model.deleteNoteDB(note.id)
     }
 
     fun editNote() {
