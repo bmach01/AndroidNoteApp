@@ -28,6 +28,7 @@ class CreationViewModel private constructor() : ViewModel() {
     var editingNote: Note? = null
 
     private var notes = MainViewModel.getInstance().notes
+
     private val model = MainModel.getInstance()
 
     fun createNewNote() {
