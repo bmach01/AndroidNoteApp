@@ -29,11 +29,12 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.note.R
 import com.example.note.ViewModel.CreationViewModel
 import java.time.Instant
 import java.time.LocalDate
@@ -113,11 +114,10 @@ fun NoteCreationView() {
                             },
                             colors = RadioButtonDefaults.colors(
                                 selectedColor = when (priority) {
-                                    0 -> Color.Gray
-                                    1 -> Color.Green
-                                    2 -> Color.Yellow
-                                    3 -> Color.Red
-                                    else -> Color.Gray
+                                    1 -> colorResource(R.color.green)
+                                    2 -> colorResource(R.color.orange)
+                                    3 -> colorResource(R.color.red)
+                                    else -> colorResource(R.color.gray)
                                 }
                             )
                         )

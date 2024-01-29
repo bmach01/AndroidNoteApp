@@ -102,8 +102,8 @@ fun NoteZoomView(note: Note?) {
                 FilledTonalButton(
                     onClick = {
                         viewModel.isNoteOpen.value = false
-                        context.startActivity(Intent(context, CreationActivity::class.java))
                         editViewModel.copyInputFromNote(note)
+                        context.startActivity(Intent(context, CreationActivity::class.java))
                     }
                 ) {
                     Icon(

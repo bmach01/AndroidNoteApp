@@ -6,8 +6,8 @@ import java.time.LocalDateTime
 data class Note(
 
     val id: Int?,
-    val title: String,
-    val details: String,
-    val priority: Int,
-    val date: LocalDateTime
+    var title: String,
+    var details: String,
+    var priority: Int,
+    var date: LocalDateTime
 )

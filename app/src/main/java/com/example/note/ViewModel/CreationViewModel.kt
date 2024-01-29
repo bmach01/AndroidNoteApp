@@ -39,19 +39,22 @@ class CreationViewModel private constructor() : ViewModel() {
     }
 
     fun deleteNote(note: Note) {
+        MainViewModel.getInstance().notes.remove(note)
         /* TODO implement deleting from db */
     }
 
     fun editNote() {
-        val newNote = Note(
-            editingNote?.id,
-            title.value,
-            details.value,
-            priority.value,
-            LocalDateTime.ofInstant(Instant.ofEpochMilli( //aids
-                datePickerState.toEpochMilli() + (timePickerState.hour - 1) * 3600 * 1000 + timePickerState.minute * 60 * 1000),
-                ZoneId.systemDefault())
-        )
+        editingNote!!.title = title.value
+        editingNote!!.details = details.value
+        editingNote!!.priority = priority.value
+        editingNote!!.date = LocalDateTime.ofInstant(Instant.ofEpochMilli( //aids
+            datePickerState.toEpochMilli() + (timePickerState.hour - 1) * 3600 * 1000 + timePickerState.minute * 60 * 1000),
+            ZoneId.systemDefault())
+
+        // this solution is bad but it will do for now
+        var index = MainViewModel.getInstance().notes.indexOf(editingNote)
+        MainViewModel.getInstance().notes.remove(editingNote)
+        MainViewModel.getInstance().notes.add(index, editingNote!!)
 
         /* TODO implement updating in db */
     }
@@ -74,6 +77,7 @@ class CreationViewModel private constructor() : ViewModel() {
         datePickerState = note.date.toInstant(ZoneOffset.systemDefault().rules.getOffset(Instant.now()))
         timePickerState = TimePickerState(note.date.hour, note.date.minute, true)
 
+        editingNote = note
         isEditing.value = true
     }
 

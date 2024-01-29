@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalTextApi::class)
-
 package com.example.note.View
 
 import android.content.Intent
@@ -31,16 +29,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.note.Model.Note
+import com.example.note.R
 import com.example.note.ViewModel.MainViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -65,14 +60,16 @@ val FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
 @Composable
 fun NoteRow(note: Note, viewModel: MainViewModel) {
     val priorityColor = when (note.priority) {
-        1 -> Color.hsv(113f, 1f, 0.68f)
-        2 -> Color.hsv(52f, 1f, 0.89f)
-        3 -> Color.hsv(0f, 1f, 0.78f)
-        else -> Color.hsv(0f, 0f, 0.49f)
+        1 -> colorResource(R.color.green)
+        2 -> colorResource(R.color.orange)
+        3 -> colorResource(R.color.red)
+        else -> colorResource(R.color.gray)
     }
 
     Surface(
-        modifier = Modifier.fillMaxWidth().padding(2.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(2.dp),
         onClick = {
             viewModel.selectedNote = note
             viewModel.isNoteOpen.value = true
