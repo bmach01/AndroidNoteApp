@@ -1,7 +1,10 @@
 package com.example.note.Model
 
+import android.util.Log
+
 class MainModel {
     lateinit var scheduler: AndroidAlarmScheduler
+    var androidId: String? = null
 
     fun schedule(note: Note) {
         val alarmItem = AlarmItem(
