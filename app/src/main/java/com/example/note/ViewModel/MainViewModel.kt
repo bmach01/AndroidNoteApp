@@ -3,6 +3,7 @@ package com.example.note.ViewModel
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.note.Model.MainModel
 import com.example.note.Model.Note
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -12,6 +13,7 @@ class MainViewModel private constructor() : ViewModel() {
     var selectedNote: Note? = null
     var notes = mutableStateListOf<Note>()
     var sortText = mutableStateOf("Tytuł")
+    val model = MainModel.getInstance()
     private var _sortMode = 0
 
     // PREVIEW INPUT
@@ -37,7 +39,8 @@ class MainViewModel private constructor() : ViewModel() {
 
     fun getNotesList(): MutableList<Note> {
         /* TODO get list from db  */
-//        notes = mutableStateListOf(model.getAllNotesDB())
+
+        notes = model.notes
         return notes
     }
 

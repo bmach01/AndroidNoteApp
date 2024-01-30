@@ -52,6 +52,10 @@ class CreationViewModel private constructor() : ViewModel() {
         model.deleteNoteDB(note)
     }
 
+    fun fetchNotesFromDB() {
+        MainModel.getInstance().getNotesDB()
+    }
+
     fun editNote() {
         editingNote!!.title = title.value
         editingNote!!.category = category.value.uppercase()
